@@ -6,18 +6,20 @@ import Image from 'next/image'
 import { FiPhoneCall, FiMail, FiMapPin, FiInstagram, FiFacebook, FiLinkedin, FiX, FiChevronDown } from 'react-icons/fi'
 import logo from '../assests/img/logo.jpeg'
 
-export default function Navbar() {
+export default function Navbar({ isStatic = false }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+    if (!isStatic) {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 50)
+      }
+      window.addEventListener('scroll', handleScroll)
+      return () => window.removeEventListener('scroll', handleScroll)
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isStatic])
 
   const navLinks = [
     { name: 'Homepage', href: '#home', hasDropdown: false },
@@ -54,7 +56,7 @@ export default function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed  top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-xl' : ''
+      className={`${isStatic ? 'relative' : 'fixed top-0'} left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-xl' : ''
         }`}
     >
       <div className="bg-white border-b border-gray-200">
